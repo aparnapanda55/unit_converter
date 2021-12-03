@@ -34,29 +34,20 @@ class _HomeScreenState extends State<HomeScreen> {
   double? _value;
   String? _fromUnit;
   String? _toUnit;
-
-  final List<String> _units = [
-    'meters',
-    'kilometers',
-    'grams',
-    'kilograms',
-    'feet',
-    'miles',
-    'pound',
-    'ounces',
-  ];
+  String? _dimension;
 
   @override
   void initState() {
     _value = 1;
-    _fromUnit = _units[1];
-    _toUnit = _units[0];
+    _dimension = dimensions()[0];
+    _fromUnit = units(_dimension!)[0];
+    _toUnit = units(_dimension!)[1];
     super.initState();
   }
 
   String _result() {
     if ([_value, _fromUnit, _toUnit].every((element) => element != null)) {
-      return convert(_value!, _fromUnit!, _toUnit!).toString();
+      return convert(_dimension!, _value!, _fromUnit!, _toUnit!).toString();
     } else {
       return '';
     }
@@ -73,6 +64,17 @@ class _HomeScreenState extends State<HomeScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              UnitDropdown(
+                items: dimensions(),
+                value: _dimension!,
+                onChanged: (value) {
+                  setState(() {
+                    _dimension = value;
+                    _fromUnit = units(_dimension!)[0];
+                    _toUnit = units(_dimension!)[1];
+                  });
+                },
+              ),
               const Text('Value', style: labelStyle),
               TextFormField(
                 style: inputStyle,
@@ -88,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const Text('From', style: labelStyle),
               UnitDropdown(
-                items: _units,
+                items: units(_dimension!),
                 value: _fromUnit!,
                 onChanged: (value) {
                   setState(() {
@@ -101,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const Text('To', style: labelStyle),
               UnitDropdown(
-                items: _units,
+                items: units(_dimension!),
                 value: _toUnit!,
                 onChanged: (value) {
                   setState(() {

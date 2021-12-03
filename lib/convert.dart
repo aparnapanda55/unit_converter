@@ -1,10 +1,10 @@
 const data = {
   'mass': {
-    'kg': {
+    'kilogram': {
       'factor': 1,
     },
     'gram': {
-      'factor': 0.001,
+      'factor': 1000,
     },
   },
   'length': {
@@ -32,5 +32,5 @@ double? convert(
   final toFactor = data[dimension]?[toUnit]?['factor'];
   return (fromFactor == null || toFactor == null)
       ? null
-      : (fromFactor as double) / (toFactor as double);
+      : (toFactor as double) / (fromFactor as double) * value;
 }
