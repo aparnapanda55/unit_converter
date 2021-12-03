@@ -92,6 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 value: _fromUnit!,
                 onChanged: (value) {
                   setState(() {
+                    if (value == _toUnit) {
+                      _toUnit = _fromUnit;
+                    }
                     _fromUnit = value;
                   });
                 },
@@ -102,6 +105,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 value: _toUnit!,
                 onChanged: (value) {
                   setState(() {
+                    if (value == _fromUnit) {
+                      _fromUnit = _toUnit;
+                    }
                     _toUnit = value;
                   });
                 },
