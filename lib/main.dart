@@ -34,7 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
   double? _value;
   String? _fromUnit;
   String? _toUnit;
-  double? _result;
 
   final List<String> _units = [
     'meters',
@@ -53,6 +52,14 @@ class _HomeScreenState extends State<HomeScreen> {
     _fromUnit = _units[1];
     _toUnit = _units[0];
     super.initState();
+  }
+
+  String _result() {
+    if ([_value, _fromUnit, _toUnit].every((element) => element != null)) {
+      return convert(_value!, _fromUnit!, _toUnit!).toString();
+    } else {
+      return '';
+    }
   }
 
   @override
@@ -80,61 +87,60 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               const Text('From', style: labelStyle),
-              DropdownButton<String>(
-                items: _units
-                    .map(
-                      (e) => DropdownMenuItem<String>(
-                        child: Text(e),
-                        value: e,
-                      ),
-                    )
-                    .toList(),
+              UnitDropdown(
+                items: _units,
+                value: _fromUnit!,
                 onChanged: (value) {
                   setState(() {
                     _fromUnit = value;
                   });
                 },
-                value: _fromUnit,
-                style: inputStyle,
-                isExpanded: true,
               ),
               const Text('To', style: labelStyle),
-              DropdownButton<String>(
-                items: _units
-                    .map(
-                      (e) => DropdownMenuItem<String>(
-                        child: Text(e),
-                        value: e,
-                      ),
-                    )
-                    .toList(),
+              UnitDropdown(
+                items: _units,
+                value: _fromUnit!,
                 onChanged: (value) {
                   setState(() {
                     _toUnit = value;
                   });
                 },
-                value: _toUnit,
-                style: inputStyle,
-                isExpanded: true,
               ),
-              ElevatedButton(
-                child: const Text(
-                  'Convert',
-                  style: inputStyle,
-                ),
-                onPressed: () {
-                  if ([_value, _fromUnit, _toUnit].every((e) => e != null)) {
-                    setState(() {
-                      _result = convert(_value!, _fromUnit!, _toUnit!);
-                    });
-                  }
-                },
-              ),
-              Text(_result?.toString() ?? ''),
+              Text(_result()),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class UnitDropdown extends StatelessWidget {
+  const UnitDropdown({
+    Key? key,
+    required this.items,
+    required this.value,
+    required this.onChanged,
+  }) : super(key: key);
+
+  final List<String> items;
+  final String value;
+  final void Function(String? value) onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<String>(
+      items: items
+          .map(
+            (e) => DropdownMenuItem<String>(
+              child: Text(e),
+              value: e,
+            ),
+          )
+          .toList(),
+      onChanged: onChanged,
+      value: value,
+      isExpanded: true,
     );
   }
 }
