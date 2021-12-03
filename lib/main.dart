@@ -99,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const Text('To', style: labelStyle),
               UnitDropdown(
                 items: _units,
-                value: _fromUnit!,
+                value: _toUnit!,
                 onChanged: (value) {
                   setState(() {
                     _toUnit = value;
