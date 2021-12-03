@@ -48,6 +48,14 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   @override
+  void initState() {
+    _value = 1;
+    _fromUnit = _units[1];
+    _toUnit = _units[0];
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -59,8 +67,9 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               const Text('Value', style: labelStyle),
-              TextField(
+              TextFormField(
                 style: inputStyle,
+                initialValue: _value.toString(),
                 decoration: const InputDecoration(
                   hintText: "measure to be converted",
                 ),
