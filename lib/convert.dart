@@ -1,38 +1,36 @@
-const units = [
-  'meters',
-  'kilometers',
-  'grams',
-  'kilograms',
-  'feet',
-  'miles',
-  'pound',
-  'ounces',
-];
-
-List<List<double>> table = [
-  [1, 0.001, 0, 0, 3.28084, 0.000621371, 0, 0],
-  [1000, 1, 0, 0, 3280.84, 0.621371, 0, 0],
-  [0, 0, 1, 0.0001, 0, 0, 0.00220462, 0.035274],
-  [0, 0, 1000, 1, 0, 0, 2.20462, 35.274],
-  [0.3048, 0.0003048, 0, 0, 1, 0.000189394, 0, 0],
-  [1609.34, 1.60934, 0, 0, 5280, 1, 0, 0],
-  [0, 0, 453.592, 0.453592, 0, 0, 1, 16],
-  [0, 0, 28.3495, 0.0283495, 3.28084, 0, 0.0625, 1],
-];
-
-double convert(double value, String from, String to) {
-  int nFrom = units.indexOf(from);
-
-  if (nFrom == -1) {
-    throw Exception('unknown unit $from');
+const data = {
+  'mass': {
+    'kg': {
+      'factor': 1,
+    },
+    'gram': {
+      'factor': 0.001,
+    },
+  },
+  'length': {
+    'meter': {
+      'factor': 1,
+    },
+    'kilometer': {
+      'factor': 1000,
+    },
+    'foot': {
+      'factor': 3.28084,
+      'approximate': true,
+    }
   }
+};
 
-  int nTo = units.indexOf(to);
+List<String> dimensions() => List.unmodifiable(data.keys);
 
-  if (nTo == -1) {
-    throw Exception('unknown unit $to');
-  }
+List<String> units(String dimension) =>
+    List.unmodifiable((data[dimension] ?? {}).keys);
 
-  var multiplier = table[nFrom][nTo];
-  return value * multiplier;
+double? convert(
+    String dimension, double value, String fromUnit, String toUnit) {
+  final fromFactor = data[dimension]?[fromUnit]?['factor'];
+  final toFactor = data[dimension]?[toUnit]?['factor'];
+  return (fromFactor == null || toFactor == null)
+      ? null
+      : (fromFactor as double) / (toFactor as double);
 }
